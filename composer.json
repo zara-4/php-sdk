@@ -1,0 +1,24 @@
+{
+  "name": "zara4/zara4-php",
+  "description": "Helper classes used to interact with the Zara 4 API.",
+  "keywords": [],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Colin Stannard",
+      "email": "colin.stannard@cbsindustries.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "ext-curl": "*",
+    "phpunit/phpunit": "3.7.*",
+    "guzzlehttp/guzzle": "6.1.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "Zara4": ""
+    }
+  }
+}
