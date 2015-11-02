@@ -23,14 +23,10 @@ abstract class GrantRequest {
    * @return array
    */
   public function getTokens() {
-    $url = Util::url("/oauth/access_token");
-
-    $client = new Client();
-    $res = $client->request("POST", $url, [
-      "json" => [$this->data()],
-    ]);
-
-    return json_decode($res->getBody());
+    return Util::post(
+      Util::url("/oauth/access_token"),
+      ["form_params" => $this->data()]
+    );
   }
 
 
