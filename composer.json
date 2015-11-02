@@ -13,8 +13,10 @@
   "minimum-stability": "dev",
   "require": {
     "ext-curl": "*",
-    "phpunit/phpunit": "3.7.*",
     "guzzlehttp/guzzle": "6.1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
   },
   "autoload": {
     "psr-0": {
