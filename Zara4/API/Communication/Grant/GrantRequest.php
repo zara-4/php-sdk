@@ -27,16 +27,23 @@ abstract class GrantRequest {
 
     $client = new Client();
     $res = $client->request("POST", $url, [
-      "json" => [
-        "grant_type"    => $this->grantType,
-        "client_id"     => $this->clientId,
-        "client_secret" => $this->clientSecret,
-        "scope"         => implode(",", array_unique($this->scopes)),
-      ],
+      "json" => [$this->data()],
     ]);
 
     return json_decode($res->getBody());
   }
+
+
+
+  protected function data() {
+    return [
+      "grant_type"    => $this->grantType,
+      "client_id"     => $this->clientId,
+      "client_secret" => $this->clientSecret,
+      "scope"         => implode(",", array_unique($this->scopes)),
+    ];
+  }
+
 
 
   /**
