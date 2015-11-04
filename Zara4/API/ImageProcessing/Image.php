@@ -31,7 +31,7 @@ class Image {
     //
     // Construct data containing file to be processed and params.
     //
-    $data = ["multipart" => [
+    $data = ["body" => [
       [
         "name"     => "file",
         "contents" => fopen($filePath, "r"),
@@ -39,7 +39,7 @@ class Image {
       ]
     ]];
     foreach($params as $key => $value) {
-      $data["multipart"][] = [
+      $data["body"][] = [
         "name"     => $key,
         "contents" => $value
       ];

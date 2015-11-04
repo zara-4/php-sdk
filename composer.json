@@ -13,7 +13,7 @@
   "minimum-stability": "dev",
   "require": {
     "ext-curl": "*",
-    "guzzlehttp/guzzle": ">=5.0"
+    "guzzlehttp/guzzle": "~5.1"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.0"

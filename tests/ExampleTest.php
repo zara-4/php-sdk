@@ -1,15 +1,18 @@
 <?php
 
+use Zara4\API\Communication\Grant\ClientCredentialsGrantRequest;
+
+
 class ExampleTest extends \PHPUnit_Framework_TestCase {
 
 
   public function testExample() {
 
-    $clientId = "5ePp9VKQfnptyWbGna9lTu3i5YgLGn8r8JI";
-    $clientSecret = "BtFjnmQkW0icp5SHPmIdMMV2eQUdyOx6bvZ";
+    $clientId = "70INWEK951yWvxfvgHGr3fjXvaN8NMXGQoD";
+    $clientSecret = "iTDTkMJmcGMZxZKZCQvNby4aSGMG4rYJD77";
 
 
-    $accessToken = \Zara4\API\Communication\OAuth::requestAccessToken($clientId, $clientSecret)->{"access_token"};
+    $accessToken = (new ClientCredentialsGrantRequest($clientId, $clientSecret))->getTokens()->{"access_token"};
 
     echo $accessToken;
 

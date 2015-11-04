@@ -25,7 +25,7 @@ abstract class GrantRequest {
   public function getTokens() {
     return Util::post(
       Util::url("/oauth/access_token"),
-      ["form_params" => $this->data()]
+      ["body" => $this->data()]
     );
   }
 
