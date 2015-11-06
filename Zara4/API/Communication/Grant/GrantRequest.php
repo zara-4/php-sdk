@@ -1,6 +1,5 @@
 <?php namespace Zara4\API\Communication\Grant;
 
-use GuzzleHttp\Client;
 use Zara4\API\Communication\Util;
 
 

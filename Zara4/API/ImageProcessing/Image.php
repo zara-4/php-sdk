@@ -1,5 +1,6 @@
 <?php namespace Zara4\API\ImageProcessing;
 
+use GuzzleHttp\Post\PostFile;
 use Zara4\API\Communication\Util;
 
 
@@ -32,17 +33,27 @@ class Image {
     // Construct data containing file to be processed and params.
     //
     $data = ["body" => [
-      [
-        "name"     => "file",
-        "contents" => fopen($filePath, "r"),
-        "filename" => "test.jpg",
-      ]
+      "file" => new PostFile('file', fopen($filePath, 'r')),
+
+      //
+      // Works for Guzzle 6
+      //
+      //[
+      //  "name"     => "file",
+      //  "contents" => fopen($filePath, "r"),
+      //  "filename" => "test.jpg",
+      //]
     ]];
     foreach($params as $key => $value) {
-      $data["body"][] = [
-        "name"     => $key,
-        "contents" => $value
-      ];
+      $data["body"][$key] = $value;
+
+      //
+      // Works for Guzzle 6
+      //
+      //$data["body"][] = [
+      //  "name"     => $key,
+      //  "contents" => $value
+      //];
     }
 
     //
