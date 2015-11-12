@@ -6,7 +6,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class Util {
 
-  const BASE_URL = "http://dev.zara4.com";
+  const BASE_URL = "https://zara4.com";
 
 
   /**
