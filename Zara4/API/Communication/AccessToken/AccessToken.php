@@ -18,12 +18,25 @@ abstract class AccessToken {
 
 
   /**
+   * Get the token.
+   *
+   * @return String
+   */
+  public function token() {
+    if($this->hasExpired()) {
+      $this->refresh();
+    }
+    return $this->accessToken;
+  }
+
+
+  /**
    * Represent this AccessToken as a String.
    *
    * @return String
    */
   public function __toString() {
-    return $this->accessToken;
+    return $this->token();
   }
 
 
