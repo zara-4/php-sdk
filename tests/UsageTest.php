@@ -1,6 +1,7 @@
 <?php
 
 use Zara4\API\Communication\Authentication\ApplicationAuthenticator;
+use Zara4\API\ImageProcessing\Image;
 use Zara4\API\ImageProcessing\Usage;
 
 
@@ -30,5 +31,11 @@ class UsageTest extends \PHPUnit_Framework_TestCase {
   public function testReadCurrentBillingPeriodUsage() {
     var_dump(Usage::currentBillingUsage($this->accessToken));
   }
+
+
+  public function testImageOptimise() {
+    $resonse = Image::optimiseImageFromFile("test-images/Ataraxia.jpg", ["access_token" => $this->accessToken]);
+  }
+
 
 } 
