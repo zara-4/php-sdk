@@ -29,7 +29,7 @@ class UsageTest extends \PHPUnit_Framework_TestCase {
 
 
   public function testReadCurrentBillingPeriodUsage() {
-    var_dump(Usage::currentBillingUsage($this->accessToken));
+    var_dump(Usage::cumulativeUsageForCurrentBillingUsage($this->accessToken));
   }
 
 

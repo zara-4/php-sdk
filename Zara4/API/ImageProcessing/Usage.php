@@ -6,19 +6,15 @@ use Zara4\API\Communication\Util;
 class Usage {
 
 
-  public static function currentBillingUsage($accessToken) {
+  public static function cumulativeUsageForCurrentBillingUsage($accessToken) {
 
-    $url = Util::url("/api/usage/current-billing-period");
+    $url = Util::url("/api/usage/image-processing/cumulative-count/current-billing-period");
     $data = ["query" => [
       "access_token" => $accessToken,
     ]];
 
     $responseData = Util::get($url, $data);
-    $dayData = (array)($responseData->{"day-data"});
-
-    return array_map(function($dateData) {
-      return $dateData->{"count"};
-    }, $dayData);
+    return (array)($responseData->{"day-data"});
   }
 
 
