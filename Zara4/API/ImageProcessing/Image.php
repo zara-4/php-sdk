@@ -25,9 +25,10 @@ class Image {
    *
    * @param $filePath
    * @param array $params
+   * @param null $forwardForIp
    * @return array
    */
-  public static function optimiseImageFromFile($filePath, array $params = []) {
+  public static function optimiseImageFromFile($filePath, array $params = [], $forwardForIp = null) {
 
     //
     // Construct data containing file to be processed and params.
@@ -55,6 +56,14 @@ class Image {
       //  "contents" => $value
       //];
     }
+
+
+    if($forwardForIp) {
+      $data["headers"] = [
+        "X-Forwarded-For" => $forwardForIp,
+      ];
+    }
+
 
     //
     // Execute
