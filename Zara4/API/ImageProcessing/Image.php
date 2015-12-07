@@ -63,7 +63,7 @@ class Image {
     //
     if($forwardForIp) {
       $data["headers"] = [
-        "X-Forwarded-For" => $forwardForIp,
+        "Z4-Connecting-IP" => $forwardForIp,
       ];
     }
 
