@@ -16,8 +16,8 @@ class UsageTest extends \PHPUnit_Framework_TestCase {
     \Zara4\API\Communication\Config::set_BASE_URL("http://zara4.dev");
 
     // Dev credentials.
-    $clientId = "rBfPlHoUwQ03Q3iuv69sCwA7sUPdaeLuvYK";
-    $clientSecret = "IexRDH5OPgeSkbwWhbY6d5UYFXZCWdqthLn";
+    $clientId = "guhqYaNiVqz7F6KLonAviOegPEKUPM8zyq2";
+    $clientSecret = "Ah7l96OB4SQhVmtADy30iCIGq1dwaR5icxc";
 
     $authenticator = (new ApplicationAuthenticator($clientId, $clientSecret))
       ->withImageProcessing()->withUsage();
@@ -34,7 +34,9 @@ class UsageTest extends \PHPUnit_Framework_TestCase {
 
 
   public function testImageOptimise() {
-    $response = Image::optimiseImageFromFile("test-images/001.jpg", ["access_token" => $this->accessToken]);
+    $response = Image::optimiseImageFromFile(
+      "test-images/001.jpg", ["access_token" => $this->accessToken->token()], "1.3.3.7"
+    );
     var_dump($response);
   }
 

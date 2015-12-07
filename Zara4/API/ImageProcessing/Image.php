@@ -58,6 +58,9 @@ class Image {
     }
 
 
+    //
+    // NOTE: This will be ignored for all API credentials (except trusted applications) to prevent ip hoaxing
+    //
     if($forwardForIp) {
       $data["headers"] = [
         "X-Forwarded-For" => $forwardForIp,

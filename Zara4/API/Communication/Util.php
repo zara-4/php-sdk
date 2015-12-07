@@ -81,7 +81,7 @@ class Util {
       $responseData = json_decode($e->getResponse()->getBody());
 
       // Client does not have scope permission
-      if($responseData->{"error"} == "invalid_scope") {
+      if($responseData && $responseData->{"error"} == "invalid_scope") {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
       }
 
