@@ -14,9 +14,43 @@ class Image {
   }
 
 
+  /**
+   * @param $url
+   * @param array $params
+   * @param null $accessToken
+   * @param null $forwardForIp
+   * @return array
+   */
+  public static function optimiseImageFromUrl($url, array $params = [], $accessToken = null, $forwardForIp = null) {
 
-  public static function optimiseImageFromUrl($url, array $params = []) {
+    //
+    // Construct data containing url to be processed and params.
+    //
+    $data = ["body" => [
+      "url" => $url,
+    ]];
+    if($accessToken) {
+      $data["body"]["access-token"] = $accessToken;
+    }
+    foreach($params as $key => $value) {
+      $data["body"][$key] = $value;
+    }
 
+
+    //
+    // NOTE: This will be ignored for all API credentials (except trusted applications) to prevent ip hoaxing
+    //
+    if($forwardForIp) {
+      $data["headers"] = [
+        "Z4-Connecting-IP" => $forwardForIp,
+      ];
+    }
+
+
+    //
+    // Execute
+    //
+    return self::optimiseImage($data);
   }
 
 
@@ -25,36 +59,23 @@ class Image {
    *
    * @param $filePath
    * @param array $params
+   * @param null $accessToken
    * @param null $forwardForIp
    * @return array
    */
-  public static function optimiseImageFromFile($filePath, array $params = [], $forwardForIp = null) {
+  public static function optimiseImageFromFile($filePath, array $params = [], $accessToken = null, $forwardForIp = null) {
 
     //
     // Construct data containing file to be processed and params.
     //
     $data = ["body" => [
       "file" => new PostFile('file', fopen($filePath, 'r')),
-
-      //
-      // Works for Guzzle 6
-      //
-      //[
-      //  "name"     => "file",
-      //  "contents" => fopen($filePath, "r"),
-      //  "filename" => "test.jpg",
-      //]
     ]];
+    if($accessToken) {
+      $data["body"]["access-token"] = $accessToken;
+    }
     foreach($params as $key => $value) {
       $data["body"][$key] = $value;
-
-      //
-      // Works for Guzzle 6
-      //
-      //$data["body"][] = [
-      //  "name"     => $key,
-      //  "contents" => $value
-      //];
     }
 
 
