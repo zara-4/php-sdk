@@ -1,7 +1,8 @@
 {
-  "name": "zara4/zara4-php",
+  "name": "zara4/php-sdk",
   "description": "Helper classes used to interact with the Zara 4 API.",
   "keywords": [],
+  "homepage": "https://github.com/zara-4/php-sdk",
   "type": "library",
   "license": "MIT",
   "authors": [
