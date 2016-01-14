@@ -1,7 +1,7 @@
 {
   "name": "zara4/php-sdk",
   "description": "Helper classes used to interact with the Zara 4 API.",
-  "keywords": [],
+  "keywords": ["Zara 4", "Image Optimisation"],
   "homepage": "https://github.com/zara-4/php-sdk",
   "type": "library",
   "license": "MIT",
@@ -13,6 +13,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
+    "php": ">=5.3.0",
     "ext-curl": "*",
     "guzzlehttp/guzzle": "~5.1"
   },
