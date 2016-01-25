@@ -14,7 +14,27 @@ class Usage {
     ]];
 
     $responseData = Util::get($url, $data);
-    return (array)($responseData->{"day-data"});
+
+    $personalDayData = (array)$responseData->{"day-data"};
+    ksort($personalDayData);
+
+    $response = [
+      "quota" => $responseData->{"quota"},
+      "personal-day-data" => $personalDayData,
+    ];
+
+
+    //
+    // Add team data
+    //
+    if(isset($responseData->{"team-day-data"})) {
+      $teamDayData = (array)$responseData->{"team-day-data"};
+      ksort($teamDayData);
+      $response["team-day-data"] = $teamDayData;
+    }
+
+
+    return $response;
   }
 
 
