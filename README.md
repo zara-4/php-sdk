@@ -75,3 +75,26 @@ $originalImage = new RemoteImageRequest("https://example.com/original-image.jpg"
 $processedImage = $apiClient->processImage($originalImage);
 $apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-image.jpg");
 ```
+
+
+### Options
+
+You can customise how your images are processed with Zara 4 by altering your request options.
+
+Example usage
+```php
+use Zara4\API\Client;
+use Zara4\API\ImageProcessing\LocalImageRequest;
+
+$apiClient = new Client(API_CLIENT_ID, API_CLIENT_SECRET);
+$originalImage = new LocalImageRequest("/path/to/original-image.jpg");
+
+// Change request options
+$originalImage->optimisationMode = OptimisationMode::HIGHEST;
+$originalImage->outputFormat = OutputFormat::MATCH;
+$originalImage->colourEnhancement = ColourEnhancement::IMPROVE_COLOUR;
+$originalImage->resizeMode = ResizeMode::NONE;
+
+$processedImage = $apiClient->processImage($originalImage);
+$apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-image.jpg");
+```
