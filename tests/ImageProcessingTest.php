@@ -7,7 +7,7 @@ use Zara4\API\ImageProcessing\Usage;
 
 class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
 
-  private $accessToken;
+  private $client;
 
 
   public function __construct() {
@@ -19,11 +19,7 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
     $clientId = "poy3h5I18Pl3evZOWu8G12jJoA5Eiknd0Nt";
     $clientSecret = "yXkzFextDeRLu1BBqnhd40zbGsQSKCKR3lq";
 
-    $authenticator = (new ApplicationAuthenticator($clientId, $clientSecret))
-      ->withImageProcessing()->withUsage();
-
-    // Acquire access token.
-    $this->accessToken = $authenticator->acquireAccessToken();
+    $this->client = new \Zara4\API\Client($clientId, $clientSecret);
   }
 
 
@@ -31,9 +27,13 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
    * Test image optimise by file upload.
    */
   public function testFileUploadImageOptimise() {
-    $response = Image::optimiseImageFromFile(
-      "test-images/001.jpg", [], $this->accessToken->token(), "1.3.3.7"
-    );
+
+    $this->client->setIpToForwardFor("1.3.3.7");
+
+    $request = new \Zara4\API\ImageProcessing\LocalImageRequest("test-images/001.jpg");
+    $response = $this->client->processImage($request);
+
+
 
     $this->assertEquals("ok", $response->{"status"});
 
@@ -52,9 +52,13 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
    * Test image optimise by url.
    */
   public function testUrlImageOptimise() {
-    $response = Image::optimiseImageFromUrl(
-      "https://zara4.com/img/comparison/beach/original.jpg", [], $this->accessToken->token(), "1.3.3.7"
-    );
+
+    $this->client->setIpToForwardFor("1.3.3.7");
+
+    $request = new \Zara4\API\ImageProcessing\RemoteImageRequest("https://zara4.com/img/comparison/beach/original.jpg");
+    $response = $this->client->processImage($request);
+
+
 
     $this->assertEquals("ok", $response->{"status"});
 

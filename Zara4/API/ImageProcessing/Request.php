@@ -1,32 +1,44 @@
 <?php namespace Zara4\API\ImageProcessing;
 
 
-class Request {
+abstract class Request {
 
-  private $id;
-  private $imageName;
-  private $originalFileSize;
+  public $optimisationMode;
+  public $outputFormat;
+  public $resizeMode;
+  public $colourEnhancement;
 
 
-  public function __construct($id, $imageName, $originalFileSize) {
-    $this->id = $id;
-    $this->imageName = $imageName;
-    $this->originalFileSize = $originalFileSize;
+  /**
+   * Construct a new image processing Request with the given options.
+   *
+   * @param string $optimisationMode
+   * @param string $outputFormat
+   * @param string $resizeMode
+   * @param string $colourEnhancement
+   */
+  public function __construct(
+    $optimisationMode = OptimisationMode::COMPROMISE, $outputFormat = OutputFormat::MATCH,
+    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE
+  ) {
+    $this->optimisationMode = $optimisationMode;
+    $this->outputFormat = $outputFormat;
+    $this->resizeMode = $resizeMode;
+    $this->colourEnhancement = $colourEnhancement;
   }
 
 
-  public function id() {
-    return $this->id;
+  /**
+   * @return string[]
+   */
+  public function generateFormData() {
+    return [
+      "optimisation-mode"   => $this->optimisationMode,
+      "output-format"       => $this->outputFormat,
+      "resize-mode"         => $this->resizeMode,
+      "colour-enhancement"  => $this->colourEnhancement,
+    ];
   }
 
 
-  public function imageName() {
-    return $this->imageName;
-  }
-
-
-  public function originalFileSize() {
-    return $this->originalFileSize;
-  }
-
-} 
+}
