@@ -28,9 +28,9 @@ The Zara 4 API uses OAuth authentication, using access tokens to grant access. A
 
 Example API client setup
 ```php
-import Zara4.API.Client;
+use Zara4\API\Client;
 
-Client apiClient = Client(API_CLIENT_ID, API_CLIENT_SECRET);
+$apiClient = new Client(API_CLIENT_ID, API_CLIENT_SECRET);
 ```
 
 
@@ -38,7 +38,7 @@ Client apiClient = Client(API_CLIENT_ID, API_CLIENT_SECRET);
 
 ## Image Processing
 
-The Zara 4 Java SDK offers extensive support for image processing, making integrating Zara 4 into your PHP application very simple.
+The Zara 4 PHP SDK offers extensive support for image processing, making integrating Zara 4 into your PHP application very simple.
 
 All authentication and communication with the Zara 4 API is automatically handled, meaning you can compress both remote and local images in just 4 lines of code.
 
