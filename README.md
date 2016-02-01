@@ -33,6 +33,9 @@ use Zara4\API\Client;
 $apiClient = new Client(API_CLIENT_ID, API_CLIENT_SECRET);
 ```
 
+To get your API credentials [click here](https://zara4.com/account/api-clients)
+
+
 
 
 
