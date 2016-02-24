@@ -26,7 +26,7 @@ class LocalImageRequest extends Request {
     $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null
   ) {
     $this->pathToImage = $pathToImage;
-    parent::__construct($optimisationMode, $outputFormat, $resizeMode, $colourEnhancement);
+    parent::__construct($optimisationMode, $outputFormat, $resizeMode, $colourEnhancement, $width, $height);
   }
 
 
