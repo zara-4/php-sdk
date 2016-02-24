@@ -68,9 +68,9 @@ class Client {
 
   /**
    * @param Request $imageProcessingRequest
-   * @return ProcessedImage
+   * @return array
    */
-  public function processImage(Request $imageProcessingRequest) {
+  public function processImageRaw(Request $imageProcessingRequest) {
     $url = Util::url("/v1/image-processing/request");
 
     //
@@ -98,6 +98,24 @@ class Client {
 
 
     return Util::post($url, $data);
+  }
+
+
+  /**
+   * @param Request $imageProcessingRequest
+   * @return ProcessedImage
+   */
+  public function processImage(Request $imageProcessingRequest) {
+    $data = $this->processImageRaw($imageProcessingRequest);
+
+    $requestId           = $data['request-id'];
+    $bytesOriginal       = $data['compression']['bytes-original'];
+    $bytesCompressed     = $data['compression']['bytes-compressed'];
+    $generatedImagesUrls = $data['generated-images']['urls'];
+
+    return new ProcessedImage(
+      $imageProcessingRequest, $requestId, $generatedImagesUrls, $bytesOriginal, $bytesCompressed
+    );
   }
 
 
