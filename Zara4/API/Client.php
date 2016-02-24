@@ -43,6 +43,20 @@ class Client {
 
 
   /**
+   * Initialise a new Client from the given API_CLIENT_ID, API_CLIENT_SECRET and AccessToken.
+   *
+   * @param AccessToken $accessToken
+   * @return \Zara4\API\Client
+   */
+  public static function initialiseFromAccessToken(AccessToken $accessToken) {
+    $client = new self();
+    $client->accessToken = $accessToken;
+    return $client;
+  }
+
+
+
+  /**
    * Set the ip address to forward for.
    *
    * @param $forwardForIp
