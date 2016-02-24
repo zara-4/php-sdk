@@ -17,11 +17,13 @@ class LocalImageRequest extends Request {
    * @param string $outputFormat
    * @param string $resizeMode
    * @param string $colourEnhancement
+   * @param null $width
+   * @param null $height
    */
   public function __construct(
     $pathToImage,
     $optimisationMode = OptimisationMode::COMPROMISE, $outputFormat = OutputFormat::MATCH,
-    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE
+    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null
   ) {
     $this->pathToImage = $pathToImage;
     parent::__construct($optimisationMode, $outputFormat, $resizeMode, $colourEnhancement);
