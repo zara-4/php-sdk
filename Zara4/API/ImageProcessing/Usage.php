@@ -8,7 +8,7 @@ class Usage {
 
   public static function cumulativeUsageForCurrentBillingUsage($accessToken) {
 
-    $url = Util::url("/api/usage/image-processing/cumulative-count/current-billing-period");
+    $url = Util::url("/v1/usage/image-processing/cumulative-count/current-billing-period");
     $data = ["query" => [
       "access_token" => $accessToken,
     ]];
