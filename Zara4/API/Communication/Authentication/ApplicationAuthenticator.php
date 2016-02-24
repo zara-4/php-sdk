@@ -11,7 +11,7 @@ class ApplicationAuthenticator extends Authenticator {
   /**
    * Get an AccessToken for use when communicating with the Zara 4 API service.
    *
-   * @return AccessToken
+   * @return ReissuableAccessToken
    */
   public function acquireAccessToken() {
     $grant = new ClientCredentialsGrantRequest($this->clientId, $this->clientSecret, $this->scopes);

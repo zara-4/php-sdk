@@ -1,9 +1,5 @@
 <?php
 
-use Zara4\API\Communication\Authentication\ApplicationAuthenticator;
-use Zara4\API\ImageProcessing\Image;
-use Zara4\API\ImageProcessing\Usage;
-
 
 class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
 
@@ -13,7 +9,7 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
   public function __construct() {
 
     // Change API endpoint to internal dev server for testing.
-    \Zara4\API\Communication\Config::set_BASE_URL("http://zara4.dev");
+    \Zara4\API\Communication\Config::enterDevelopmentMode();
 
     // Dev credentials.
     $clientId = "poy3h5I18Pl3evZOWu8G12jJoA5Eiknd0Nt";

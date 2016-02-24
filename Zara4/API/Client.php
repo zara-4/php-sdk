@@ -57,7 +57,7 @@ class Client {
    * @return ProcessedImage
    */
   public function processImage(Request $imageProcessingRequest) {
-    $url = Util::url("/api/image-processing/optimise");
+    $url = Util::url("/v1/image-processing/request");
 
     //
     // Construct data containing url to be processed and params.

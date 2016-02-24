@@ -1,8 +1,8 @@
 <?php namespace Zara4\API\Communication;
 
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+
 
 class Util {
 

@@ -22,7 +22,7 @@ class UserAuthenticator extends Authenticator {
   /**
    * Get an AccessToken for use when communicating with the Zara 4 API service.
    *
-   * @return AccessToken
+   * @return RefreshableAccessToken
    */
   public function acquireAccessToken() {
     $grant = new PasswordGrant($this->clientId, $this->clientSecret, $this->username, $this->password, $this->scopes);
