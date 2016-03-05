@@ -106,7 +106,7 @@ class Client {
    * @return ProcessedImage
    */
   public function processImage(Request $imageProcessingRequest) {
-    $data = $this->processImageRaw($imageProcessingRequest);
+    $data = (array)$this->processImageRaw($imageProcessingRequest);
 
     $requestId           = $data['request-id'];
     $bytesOriginal       = $data['compression']['bytes-original'];
