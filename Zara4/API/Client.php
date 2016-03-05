@@ -133,7 +133,16 @@ class Client {
       $url .= "?access_token=" . $this->accessToken->token();
     }
 
-    if(file_put_contents($savePath, fopen($url, 'r'))) {
+    try {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      $data = curl_exec ($ch);
+      curl_close ($ch);
+      $file = fopen($savePath, "w+");
+      fputs($file, $data);
+      fclose($file);
+    } catch(\Exception $e) {
       throw new UnknownServerErrorException("Failed to retrieve your image");
     }
   }
