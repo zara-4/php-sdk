@@ -78,7 +78,7 @@ class Client {
     //
     $data = ["body" => []];
     if($this->accessToken) {
-      $data["body"]["access-token"] = $this->accessToken->token();
+      $data["body"]["access_token"] = $this->accessToken->token();
     }
 
     $params = $imageProcessingRequest->generateFormData();
