@@ -99,7 +99,12 @@ class Util {
       }
 
       if($responseData && $responseData->{"error"} == "quota_limit") {
-        throw new QuotaLimitException();
+        $data = $responseData->{"data"};
+        if($data->{'action'} == 'registration-required') {
+          throw new AnonymousUserQuotaLimitException();
+        } else {
+          throw new RegisteredUserQuotaLimitException();
+        }
       }
 
       // Generic error
