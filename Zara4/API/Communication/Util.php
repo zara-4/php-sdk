@@ -2,6 +2,9 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException;
+use Zara4\API\ImageProcessing\QuotaLimitException;
+use Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException;
 
 
 class Util {
@@ -22,9 +25,10 @@ class Util {
    *
    * @param $url
    * @param $data
-   * @return array
    * @throws Exception
+   * @throws \Zara4\API\ImageProcessing\QuotaLimitException
    * @throws AccessDeniedException
+   * @return array
    */
   public static function get($url, $data) {
 
@@ -46,6 +50,15 @@ class Util {
       // Client does not have scope permission
       if($responseData->{"error"} == "invalid_scope") {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
+      }
+
+      if($responseData && $responseData->{"error"} == "quota_limit") {
+        $data = $responseData->{"data"};
+        if($data->{'action'} == 'registration-required') {
+          throw new AnonymousUserQuotaLimitException();
+        } else {
+          throw new RegisteredUserQuotaLimitException();
+        }
       }
 
       // Generic error
@@ -83,6 +96,10 @@ class Util {
       // Client does not have scope permission
       if($responseData && $responseData->{"error"} == "invalid_scope") {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
+      }
+
+      if($responseData && $responseData->{"error"} == "quota_limit") {
+        throw new QuotaLimitException();
       }
 
       // Generic error
