@@ -40,6 +40,17 @@ abstract class GrantRequest {
   }
 
 
+  /**
+   * Add the given scope to this GrantRequest.
+   *
+   * @param $scope
+   * @return $this
+   */
+  public function addScope($scope) {
+    array_push($this->scopes, $scope);
+    return $this;
+  }
+
 
   /**
    * Add image processing to the request scope.
@@ -47,8 +58,7 @@ abstract class GrantRequest {
    * @return $this
    */
   public function withImageProcessing() {
-    array_push($this->scopes, "image-processing");
-    return $this;
+    return $this->addScope('image-processing');
   }
 
 
@@ -58,8 +68,7 @@ abstract class GrantRequest {
    * @return $this
    */
   public function withUsage() {
-    array_push($this->scopes, "usage");
-    return $this;
+    return $this->addScope('usage');
   }
 
 } 

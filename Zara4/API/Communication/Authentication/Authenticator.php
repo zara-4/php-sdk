@@ -24,15 +24,24 @@ abstract class Authenticator {
   public abstract function acquireAccessToken();
 
 
+  /**
+   * Add scope to this Authenticator.
+   *
+   * @param $scope
+   * @return int
+   */
+  public function addScope($scope) {
+    return array_push($this->scopes, $scope);
+  }
 
-    /**
-     * Add image processing to the Authenticator scope.
-     *
-     * @return $this
-     */
+
+  /**
+   * Add image processing to the Authenticator scope.
+   *
+   * @return $this
+   */
   public function withImageProcessing() {
-    array_push($this->scopes, "image-processing");
-    return $this;
+    return $this->addScope('image-processing');
   }
 
 
@@ -42,8 +51,7 @@ abstract class Authenticator {
    * @return $this
    */
   public function withUsage() {
-    array_push($this->scopes, "usage");
-    return $this;
+    return $this->addScope('usage');
   }
 
 
