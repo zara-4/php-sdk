@@ -28,10 +28,11 @@ abstract class Authenticator {
    * Add scope to this Authenticator.
    *
    * @param $scope
-   * @return int
+   * @return $this
    */
   public function addScope($scope) {
-    return array_push($this->scopes, $scope);
+    array_push($this->scopes, $scope);
+    return $this;
   }
 
 
