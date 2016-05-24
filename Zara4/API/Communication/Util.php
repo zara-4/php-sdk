@@ -52,6 +52,11 @@ class Util {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
       }
 
+      // Bad payment
+      if($responseData->{"error"} == "bad_payment") {
+        throw new BadPaymentException($responseData->{"error_description"});
+      }
+
       if($responseData && $responseData->{"error"} == "quota_limit") {
         $data = $responseData->{"data"};
         if($data->{'action'} == 'registration-required') {
