@@ -3,6 +3,7 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException;
+use Zara4\API\ImageProcessing\EmailNotVerifiedException;
 use Zara4\API\ImageProcessing\QuotaLimitException;
 use Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException;
 
@@ -66,6 +67,10 @@ class Util {
         }
       }
 
+      if($responseData->{"error"} == "user_email_not_verified") {
+        throw new EmailNotVerifiedException($responseData->{"error_description"});
+      }
+
       // Generic error
       throw new Exception($responseData->{"error_description"});
     }
@@ -115,6 +120,10 @@ class Util {
         } else {
           throw new RegisteredUserQuotaLimitException();
         }
+      }
+
+      if($responseData->{"error"} == "user_email_not_verified") {
+        throw new EmailNotVerifiedException($responseData->{"error_description"});
       }
 
       // Generic error
