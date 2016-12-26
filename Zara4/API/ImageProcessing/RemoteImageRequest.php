@@ -14,17 +14,21 @@ class RemoteImageRequest extends Request {
    * @param string $optimisationMode
    * @param string $outputFormat
    * @param string $resizeMode
-   * @param string $colourEnhancement
-   * @param null $width
-   * @param null $height
+   * @param int|null|string $colourEnhancement
+   * @param int $width
+   * @param int $height
+   * @param bool $maintainExif
    */
   public function __construct(
     $url,
     $optimisationMode = OptimisationMode::COMPROMISE, $outputFormat = OutputFormat::MATCH,
-    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null
+    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null,
+    $maintainExif = false
   ) {
     $this->url = $url;
-    parent::__construct($optimisationMode, $outputFormat, $resizeMode, $colourEnhancement, $width, $height);
+    parent::__construct(
+      $optimisationMode, $outputFormat, $resizeMode, $colourEnhancement, $width, $height, $maintainExif
+    );
   }
 
 

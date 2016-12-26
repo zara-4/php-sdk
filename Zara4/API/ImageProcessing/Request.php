@@ -9,6 +9,7 @@ abstract class Request {
   public $colourEnhancement;
   public $width;
   public $height;
+  public $maintainExif;
 
 
   /**
@@ -18,12 +19,14 @@ abstract class Request {
    * @param string $outputFormat
    * @param string $resizeMode
    * @param string $colourEnhancement
-   * @param null $width
-   * @param null $height
+   * @param int $width
+   * @param int $height
+   * @param bool $maintainExif
    */
   public function __construct(
     $optimisationMode = OptimisationMode::COMPROMISE, $outputFormat = OutputFormat::MATCH,
-    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null
+    $resizeMode = ResizeMode::NONE, $colourEnhancement = ColourEnhancement::NONE, $width = null, $height = null,
+    $maintainExif = false
   ) {
     $this->optimisationMode   = $optimisationMode;
     $this->outputFormat       = $outputFormat;
@@ -31,6 +34,7 @@ abstract class Request {
     $this->colourEnhancement  = $colourEnhancement;
     $this->width              = $width;
     $this->height             = $height;
+    $this->maintainExif       = $maintainExif;
   }
 
 
@@ -45,6 +49,7 @@ abstract class Request {
       'colour-enhancement'  => $this->colourEnhancement,
       'width'               => $this->width,
       'height'              => $this->height,
+      'maintain-exif'       => $this->maintainExif,
     ];
   }
 
