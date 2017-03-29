@@ -1,5 +1,7 @@
 # Zara 4 PHP SDK
 
+PHP SDK for the Zara 4 [Image Compression](https://zara4.com) API. For more information see Zara 4 API [documentation](https://zara4.com/docs/getting-started/welcome)
+
 
 ## Installation
 

@@ -26,9 +26,12 @@ class Util {
    *
    * @param $url
    * @param $data
-   * @throws Exception
-   * @throws \Zara4\API\ImageProcessing\QuotaLimitException
    * @throws AccessDeniedException
+   * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
+   * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
+   * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
+   * @throws BadPaymentException
+   * @throws Exception
    * @return array
    */
   public static function get($url, $data) {
@@ -49,16 +52,16 @@ class Util {
       $responseData = json_decode($e->getResponse()->getBody());
 
       // Client does not have scope permission
-      if($responseData->{"error"} == "invalid_scope") {
+      if ($responseData->{"error"} == "invalid_scope") {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
       }
 
       // Bad payment
-      if($responseData->{"error"} == "bad_payment") {
+      if ($responseData->{"error"} == "bad_payment") {
         throw new BadPaymentException($responseData->{"error_description"});
       }
 
-      if($responseData && $responseData->{"error"} == "quota_limit") {
+      if ($responseData && $responseData->{"error"} == "quota_limit") {
         $data = $responseData->{"data"};
         if($data->{'action'} == 'registration-required') {
           throw new AnonymousUserQuotaLimitException();
@@ -67,12 +70,17 @@ class Util {
         }
       }
 
-      if($responseData->{"error"} == "user_email_not_verified") {
-        throw new EmailNotVerifiedException($responseData->{"error_description"});
+      if ($responseData->{'error'} == 'user_email_not_verified') {
+        throw new EmailNotVerifiedException($responseData->{'error_description'});
+      }
+
+      // Webhook limit reached
+      if ($responseData->{'error'} == 'webhook_limit_reached') {
+        throw new WebhookLimitReachedException($responseData->{'data'}->{'maximum-webhooks'});
       }
 
       // Generic error
-      throw new Exception($responseData->{"error_description"});
+      throw new Exception($responseData->{'error_description'});
     }
   }
 
@@ -82,9 +90,15 @@ class Util {
    *
    * @param $url
    * @param $data
-   * @return array
+   *
    * @throws Exception
    * @throws AccessDeniedException
+   * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
+   * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
+   * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
+   * @throws BadPaymentException
+   *
+   * @return array
    */
   public static function post($url, $data) {
 
@@ -104,16 +118,16 @@ class Util {
       $responseData = json_decode($e->getResponse()->getBody());
 
       // Client does not have scope permission
-      if($responseData && $responseData->{"error"} == "invalid_scope") {
+      if ($responseData && $responseData->{"error"} == "invalid_scope") {
         throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
       }
 
       // Bad payment
-      if($responseData->{"error"} == "bad_payment") {
-        throw new BadPaymentException($responseData->{"error_description"});
+      if ($responseData->{'error'} == 'bad_payment') {
+        throw new BadPaymentException($responseData->{'error_description'});
       }
 
-      if($responseData && $responseData->{"error"} == "quota_limit") {
+      if ($responseData && $responseData->{'error'} == 'quota_limit') {
         $data = $responseData->{"data"};
         if($data->{'action'} == 'registration-required') {
           throw new AnonymousUserQuotaLimitException();
@@ -122,13 +136,32 @@ class Util {
         }
       }
 
-      if($responseData->{"error"} == "user_email_not_verified") {
-        throw new EmailNotVerifiedException($responseData->{"error_description"});
+      if ($responseData->{'error'} == 'user_email_not_verified') {
+        throw new EmailNotVerifiedException($responseData->{'error_description'});
+      }
+
+      // Webhook limit reached
+      if ($responseData->{'error'} == 'webhook_limit_reached') {
+        throw new WebhookLimitReachedException($responseData->{'data'}->{'maximum-webhooks'});
       }
 
       // Generic error
-      throw new Exception($responseData->{"error_description"});
+      throw new Exception($responseData->{'error_description'});
     }
+  }
+
+
+
+  public static function delete($url, $accessToken) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    if ($accessToken != null) {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'Authorization: Bearer ' . $accessToken)
+      );
+    }
+
+    $result = curl_exec($ch);
   }
 
 
@@ -157,7 +190,7 @@ class Util {
     //
     // Just get the headers if we can or else use the SERVER global
     //
-    if(function_exists('apache_request_headers')) {
+    if (function_exists('apache_request_headers')) {
       $headers = apache_request_headers();
     } else {
       $headers = $_SERVER;
