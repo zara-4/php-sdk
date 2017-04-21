@@ -82,6 +82,27 @@ $apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-i
 ```
 
 
+
+### Cloud Image
+
+To process images from a cloud location (such as a Google Drive or Dropbox), you should use a CloudImageRequest. This downloads the image from the cloud location to Zara 4 for processing.
+
+Example usage
+```php
+use Zara4\API\Client;
+use Zara4\API\ImageProcessing\CloudImageRequest;
+use Zara4\API\ImageProcessing\ProcessedImage;
+
+$apiClient = new Client(API_CLIENT_ID, API_CLIENT_SECRET);
+$cloudDriveId = '905aaac0-06bb-11e7-83da-0b30de6ae4a2'; // Replace with your cloud drive id
+$cloudFileId  = '0B_x2cioi5h8IX1NwYkNDcE96Tlk'; // Replace with the id of the file you wish to compress
+$originalImage = new CloudImageRequest($cloudDriveId, $cloudFileId);
+$processedImage = $apiClient->processImage($originalImage);
+$apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-image.jpg");
+```
+
+
+
 ### Options
 
 You can customise how your images are processed with Zara 4 by altering your request options.
