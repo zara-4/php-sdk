@@ -11,6 +11,10 @@ abstract class Request {
   public $height;
   public $maintainExif;
 
+  private $cloudStorageDestinationId = null;
+  private $cloudStorageDestinationFileId = null;
+  private $cloudStorageDestinationParentId = null;
+
 
   /**
    * Construct a new image processing Request with the given options.
@@ -42,7 +46,7 @@ abstract class Request {
    * @return string[]
    */
   public function generateFormData() {
-    return [
+    $data = [
       'optimisation-mode'   => $this->optimisationMode,
       'output-format'       => $this->outputFormat,
       'resize-mode'         => $this->resizeMode,
@@ -51,6 +55,36 @@ abstract class Request {
       'height'              => $this->height,
       'maintain-exif'       => $this->maintainExif,
     ];
+
+    //
+    // Cloud Upload
+    //
+    $destination = [
+      'drive-id'  => $this->cloudStorageDestinationId,
+      'file-id'   => $this->cloudStorageDestinationFileId,
+    ];
+    if ($this->cloudStorageDestinationParentId) {
+      $destination['parent-id'] = $this->cloudStorageDestinationParentId;
+    }
+    if ($this->cloudStorageDestinationId && $this->cloudStorageDestinationFileId) {
+      $data['cloud'] = ['destination' => $destination];
+    }
+
+    return $data;
+  }
+
+
+  /**
+   * @param $cloudStorageLocationId
+   * @param $cloudStorageLocationFilePath
+   * @param $cloudStorageLocationParentId
+   */
+  public function uploadToCloud(
+    $cloudStorageLocationId, $cloudStorageLocationFilePath, $cloudStorageLocationParentId = null
+  ) {
+    $this->cloudStorageDestinationId = $cloudStorageLocationId;
+    $this->cloudStorageDestinationFileId = $cloudStorageLocationFilePath;
+    $this->cloudStorageDestinationParentId = $cloudStorageLocationParentId;
   }
 
 
