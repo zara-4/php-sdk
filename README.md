@@ -148,7 +148,7 @@ $destinationFileName = 'YOUR FILE NAME';
 
 // You can also specify the folder the compressed image should be uploaded to
 // If you do not wish to specify a parent folder, set $destinationParentId = null
-$destinationParentId = '0B_x2cioi5h8ITTBNSzJOc3V2aWc';
+$destinationParentId = 'xxxxxxxxxxxxxxxxxxx';
 
 $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
 
