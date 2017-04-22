@@ -124,3 +124,31 @@ $originalImage->resizeMode = ResizeMode::NONE;
 $processedImage = $apiClient->processImage($originalImage);
 $apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-image.jpg");
 ```
+
+
+
+
+
+
+## Uploading Compressed Images To Cloud Storage
+
+```php
+$request = new \Zara4\API\ImageProcessing\LocalImageRequest('test-images/001.jpg');
+
+
+// The id of the cloud storage drive to upload to (Replace with your cloud drive id)
+// You can manage your Cloud Storage from https://zara4.com/account/cloud-storage
+$destinationDriveId = '905aaac0-06bb-11e7-83da-0b30de6ae4a2';
+
+// The name the uploaded file should be given on you Cloud Storage
+$destinationFileName = 'YOUR FILE NAME';
+
+// You can also specify the folder the compressed image should be uploaded to
+// If you do not wish to specify a parent folder, set $destinationParentId = null
+$destinationParentId = '0B_x2cioi5h8ITTBNSzJOc3V2aWc';
+
+$request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
+
+
+$response = $this->client->processImage($request);
+```
