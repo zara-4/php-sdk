@@ -132,6 +132,8 @@ $apiClient->downloadProcessedImage($processedImage, "/where/to/save/compressed-i
 
 ## Uploading Compressed Images To Cloud Storage
 
+As well as downloading compressed images, you can also request from them to be uploaded to one of your [Cloud Storage](https://zara4.com/account/cloud-storage) locations.
+
 ```php
 $request = new \Zara4\API\ImageProcessing\LocalImageRequest('test-images/001.jpg');
 
