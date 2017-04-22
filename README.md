@@ -137,6 +137,7 @@ As well as downloading compressed images, you can also request from them to be u
 ```php
 $request = new \Zara4\API\ImageProcessing\LocalImageRequest('test-images/001.jpg');
 
+// --- --- --- ---
 
 // The id of the cloud storage drive to upload to (Replace with your cloud drive id)
 // You can manage your Cloud Storage from https://zara4.com/account/cloud-storage
@@ -151,6 +152,7 @@ $destinationParentId = '0B_x2cioi5h8ITTBNSzJOc3V2aWc';
 
 $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
 
+// --- --- --- ---
 
 $response = $this->client->processImage($request);
 ```
