@@ -3,6 +3,11 @@
 
 class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
 
+  private static $GOOGLE_DRIVE  = '905aaac0-06bb-11e7-83da-0b30de6ae4a2';
+  private static $AWS_S3        = 'f1b5b200-2908-11e7-b67a-1709de57da39';
+
+  // --- --- ---
+
   private $client;
 
 
@@ -63,7 +68,7 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
     $this->client->setIpToForwardFor('1.3.3.7');
 
     $request = new \Zara4\API\ImageProcessing\CloudImageRequest(
-      '905aaac0-06bb-11e7-83da-0b30de6ae4a2', '0B_x2cioi5h8IUzlFU29sUERCUms'
+      self::$GOOGLE_DRIVE, '0B_x2cioi5h8IUzlFU29sUERCUms'
     );
     $response = $this->client->processImage($request);
 
@@ -77,7 +82,7 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
 
     $request = new \Zara4\API\ImageProcessing\LocalImageRequest('test-images/001.jpg');
 
-    $destinationDriveId  = '905aaac0-06bb-11e7-83da-0b30de6ae4a2';
+    $destinationDriveId  = self::$GOOGLE_DRIVE;
     $destinationFileName = uniqid('LOCAL_IMAGE__');
     $destinationParentId = '0B_x2cioi5h8ITTBNSzJOc3V2aWc';
     $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
@@ -95,10 +100,10 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
     $this->client->setIpToForwardFor('1.3.3.7');
 
     $request = new \Zara4\API\ImageProcessing\CloudImageRequest(
-      '905aaac0-06bb-11e7-83da-0b30de6ae4a2', '0B_x2cioi5h8IX1NwYkNDcE96Tlk'
+      self::$GOOGLE_DRIVE, '0B_x2cioi5h8IX1NwYkNDcE96Tlk'
     );
 
-    $destinationDriveId  = '905aaac0-06bb-11e7-83da-0b30de6ae4a2';
+    $destinationDriveId  = self::$GOOGLE_DRIVE;
     $destinationFileName = uniqid('CLOUD_IMAGE_');
     $destinationParentId = '0B_x2cioi5h8ITTBNSzJOc3V2aWc';
     $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
@@ -107,5 +112,43 @@ class ImageProcessingTest extends \PHPUnit_Framework_TestCase {
     $response = $this->client->processImage($request);
 
   }
+
+
+
+  /**
+   *
+   */
+  public function testAwsS3CloudUpload() {
+
+    $request = new \Zara4\API\ImageProcessing\LocalImageRequest('test-images/001.jpg');
+
+    $destinationDriveId  = self::$AWS_S3;
+    $destinationFileName = uniqid('LOCAL_IMAGE__');
+    $destinationParentId = '';
+    $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
+
+    $response = $this->client->processImage($request);
+
+  }
+
+
+  /**
+   * Test image optimise by url.
+   */
+  public function testAwsS3CloudDownload() {
+
+    $this->client->setIpToForwardFor('1.3.3.7');
+
+    $request = new \Zara4\API\ImageProcessing\CloudImageRequest(self::$AWS_S3, '001.jpg');
+
+    $destinationDriveId  = self::$AWS_S3;
+    $destinationFileName = uniqid('001_COMPRESSED__');
+    $destinationParentId = 'test';
+    $request->uploadToCloud($destinationDriveId, $destinationFileName, $destinationParentId);
+
+    $response = $this->client->processImage($request);
+
+  }
+
 
 }

@@ -2,9 +2,9 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Zara4\API\CloudStorage\AwsS3\InvalidBucketException;
 use Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException;
 use Zara4\API\ImageProcessing\EmailNotVerifiedException;
-use Zara4\API\ImageProcessing\QuotaLimitException;
 use Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException;
 
 
@@ -22,16 +22,111 @@ class Util {
 
 
   /**
+   * Handle error
+   *
+   * @param $responseData
+   * @throws AccessDeniedException
+   * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
+   * @throws WebhookLimitReachedException
+   * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
+   * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
+   * @throws \Zara4\API\CloudStorage\AwsS3\InvalidBucketException
+   * @throws BadPaymentException
+   * @throws UnknownException
+   */
+  private static function handleError($responseData) {
+
+    $error = $responseData->{'error'};
+    $data = array_key_exists('data', $responseData) ? $responseData->{'data'} : null;
+
+    // --- --- --
+
+    //
+    // OAuth
+    //
+
+    // Client does not have scope permission
+    if ($error == 'invalid_scope') {
+      throw new AccessDeniedException('The client credentials are not authorised to perform this action. Scope error.');
+    }
+
+    // --- --- ---
+
+    //
+    // Image Processing
+    //
+
+    // Quota limit
+    if ($error == 'quota_limit') {
+      $action = $data && array_key_exists('maximum-webhooks', $data)
+        ? $data->{'action'} : 'registration-required';
+      if ($action == 'registration-required') {
+        throw new AnonymousUserQuotaLimitException();
+      } else {
+        throw new RegisteredUserQuotaLimitException();
+      }
+    }
+
+    // --- --- ---
+
+    //
+    // User
+    //
+
+    // Email not verified
+    if ($responseData->{'error'} == 'user_email_not_verified') {
+      throw new EmailNotVerifiedException($responseData->{'error_description'});
+    }
+
+    // --- --- ---
+
+    //
+    // Billing
+    //
+
+    // Bad payment
+    if ($error == 'bad_payment') {
+      throw new BadPaymentException($responseData->{'error_description'});
+    }
+
+    // --- --- --
+
+    //
+    // Webhooks
+    //
+
+    // Webhook limit reached
+    if ($responseData->{'error'} == 'webhook_limit_reached') {
+      $maximumWebhooks = $data && array_key_exists('maximum-webhooks', $data)
+        ? $data->{'maximum-webhooks'} : 10;
+      throw new WebhookLimitReachedException($maximumWebhooks);
+    }
+
+    // --- --- ---
+
+    //
+    // Cloud
+    //
+
+    // Invalid AWS S3 Bucket
+    if ($error == 'cloud_aws_invalid_bucket') {
+      $bucket = array_key_exists('bucket', $responseData) ? $responseData->{'bucket'} : null;
+      throw new InvalidBucketException($bucket);
+    }
+
+    // --- --- ---
+
+    // Generic error
+    throw new UnknownException($responseData->{'error_description'});
+  }
+
+
+  /**
    * GET the given $data to the given $url.
    *
    * @param $url
    * @param $data
-   * @throws AccessDeniedException
-   * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
-   * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
-   * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
-   * @throws BadPaymentException
-   * @throws Exception
+   * @throws \Zara4\API\Exception
    * @return array
    */
   public static function get($url, $data) {
@@ -45,42 +140,13 @@ class Util {
       return json_decode($res->getBody());
     }
 
-      //
-      // Error Handling
-      //
-    catch(RequestException $e) {
+    //
+    // Error Handling
+    //
+    catch (RequestException $e) {
       $responseData = json_decode($e->getResponse()->getBody());
-
-      // Client does not have scope permission
-      if ($responseData->{"error"} == "invalid_scope") {
-        throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
-      }
-
-      // Bad payment
-      if ($responseData->{"error"} == "bad_payment") {
-        throw new BadPaymentException($responseData->{"error_description"});
-      }
-
-      if ($responseData && $responseData->{"error"} == "quota_limit") {
-        $data = $responseData->{"data"};
-        if($data->{'action'} == 'registration-required') {
-          throw new AnonymousUserQuotaLimitException();
-        } else {
-          throw new RegisteredUserQuotaLimitException();
-        }
-      }
-
-      if ($responseData->{'error'} == 'user_email_not_verified') {
-        throw new EmailNotVerifiedException($responseData->{'error_description'});
-      }
-
-      // Webhook limit reached
-      if ($responseData->{'error'} == 'webhook_limit_reached') {
-        throw new WebhookLimitReachedException($responseData->{'data'}->{'maximum-webhooks'});
-      }
-
-      // Generic error
-      throw new Exception($responseData->{'error_description'});
+      self::handleError($responseData);
+      throw new \Zara4\API\Exception();
     }
   }
 
@@ -90,14 +156,7 @@ class Util {
    *
    * @param $url
    * @param $data
-   *
-   * @throws Exception
-   * @throws AccessDeniedException
-   * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
-   * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
-   * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
-   * @throws BadPaymentException
-   *
+   * @throws \Zara4\API\Exception
    * @return array
    */
   public static function post($url, $data) {
@@ -116,45 +175,19 @@ class Util {
     //
     catch(RequestException $e) {
       $responseData = json_decode($e->getResponse()->getBody());
-
-      // Client does not have scope permission
-      if ($responseData && $responseData->{"error"} == "invalid_scope") {
-        throw new AccessDeniedException("The client credentials are not authorised to perform this action. Scope error.");
-      }
-
-      // Bad payment
-      if ($responseData->{'error'} == 'bad_payment') {
-        throw new BadPaymentException($responseData->{'error_description'});
-      }
-
-      if ($responseData && $responseData->{'error'} == 'quota_limit') {
-        $data = $responseData->{"data"};
-        if($data->{'action'} == 'registration-required') {
-          throw new AnonymousUserQuotaLimitException();
-        } else {
-          throw new RegisteredUserQuotaLimitException();
-        }
-      }
-
-      if ($responseData->{'error'} == 'user_email_not_verified') {
-        throw new EmailNotVerifiedException($responseData->{'error_description'});
-      }
-
-      // Webhook limit reached
-      if ($responseData->{'error'} == 'webhook_limit_reached') {
-        throw new WebhookLimitReachedException($responseData->{'data'}->{'maximum-webhooks'});
-      }
-
-      // Generic error
-      throw new Exception($responseData->{'error_description'});
+      self::handleError($responseData);
+      throw new \Zara4\API\Exception();
     }
   }
 
 
-
+  /**
+   * @param $url
+   * @param $accessToken
+   */
   public static function delete($url, $accessToken) {
     $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     if ($accessToken != null) {
       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
           'Authorization: Bearer ' . $accessToken)
@@ -199,14 +232,14 @@ class Util {
     //
     // Get the forwarded IP if it exists
     //
-    if(
+    if (
       array_key_exists('X-Forwarded-For', $headers) &&
       filter_var($headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
     ) {
       $the_ip = $headers['X-Forwarded-For'];
     }
 
-    elseif(
+    elseif (
       array_key_exists('HTTP_X_FORWARDED_FOR', $headers ) &&
       filter_var($headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
     ) {
