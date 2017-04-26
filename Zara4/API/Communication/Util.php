@@ -3,6 +3,7 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Zara4\API\CloudStorage\AwsS3\InvalidBucketException;
+use Zara4\API\CloudStorage\AwsS3\InvalidCredentialsException;
 use Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException;
 use Zara4\API\ImageProcessing\EmailNotVerifiedException;
 use Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException;
@@ -107,6 +108,11 @@ class Util {
     //
     // Cloud
     //
+
+    // Invalid AWS credentials
+    if ($error == 'cloud_aws_invalid_credentials') {
+      throw new InvalidCredentialsException();
+    }
 
     // Invalid AWS S3 Bucket
     if ($error == 'cloud_aws_invalid_bucket') {
