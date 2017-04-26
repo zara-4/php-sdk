@@ -30,10 +30,11 @@ class Util {
    * @throws \Zara4\API\ImageProcessing\EmailNotVerifiedException
    * @throws WebhookLimitReachedException
    * @throws \Zara4\API\ImageProcessing\RegisteredUserQuotaLimitException
+   * @throws UnknownException
    * @throws \Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException
+   * @throws \Zara4\API\CloudStorage\AwsS3\InvalidCredentialsException
    * @throws \Zara4\API\CloudStorage\AwsS3\InvalidBucketException
    * @throws BadPaymentException
-   * @throws UnknownException
    */
   private static function handleError($responseData) {
 
@@ -116,7 +117,7 @@ class Util {
 
     // Invalid AWS S3 Bucket
     if ($error == 'cloud_aws_invalid_bucket') {
-      $bucket = array_key_exists('bucket', $responseData) ? $responseData->{'bucket'} : null;
+      $bucket = array_key_exists('bucket', $data) ? $data->{'bucket'} : null;
       throw new InvalidBucketException($bucket);
     }
 
