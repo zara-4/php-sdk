@@ -2,6 +2,11 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Zara4\API\Auth\Register\EmailAddress\DomainIsBlacklistedException;
+use Zara4\API\Auth\Register\EmailAddress\EmailAlreadyInUseException;
+use Zara4\API\Auth\Register\InvalidNameException;
+use Zara4\API\Auth\Register\InvalidRecaptchaException;
+use Zara4\API\Auth\Register\Password\PasswordTooShortException;
 use Zara4\API\CloudStorage\AwsS3\InvalidBucketException;
 use Zara4\API\CloudStorage\AwsS3\InvalidCredentialsException;
 use Zara4\API\ImageProcessing\AnonymousUserQuotaLimitException;
@@ -119,6 +124,39 @@ class Util {
     if ($error == 'cloud_aws_invalid_bucket') {
       $bucket = array_key_exists('bucket', $data) ? $data->{'bucket'} : null;
       throw new InvalidBucketException($bucket);
+    }
+
+    // --- --- ---
+
+    //
+    // Account Registration
+    //
+
+    // Recaptcha invalid
+    if ($error == 'auth_register_invalid-recaptcha') {
+      throw new InvalidRecaptchaException();
+    }
+
+    // Email address domain is blacklisted
+    if ($error == 'auth_register_email-domain-blacklisted') {
+      $domain = array_key_exists('domain', $data) ? $data->{'domain'} : null;
+      throw new DomainIsBlacklistedException($domain);
+    }
+
+    // Email address is already in use
+    if ($error == 'auth_register_email-already-in-use') {
+      throw new EmailAlreadyInUseException();
+    }
+
+    // Password too short
+    if ($error == 'auth_register_password-too-short') {
+      $minimumLength = array_key_exists('minimum-length', $data) ? $data->{'minimum-length'} : null;
+      throw new PasswordTooShortException($minimumLength);
+    }
+
+    // Name invalid
+    if ($error == 'auth_register_invalid-name') {
+      throw new InvalidNameException();
     }
 
     // --- --- ---

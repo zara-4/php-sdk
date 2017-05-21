@@ -32,7 +32,7 @@ class Client {
     $this->apiClientId = $apiClientId;
     $this->apiClientSecret = $apiClientSecret;
 
-    if($this->apiClientId && $this->apiClientSecret) {
+    if ($this->apiClientId && $this->apiClientSecret) {
       $authenticator = new ApplicationAuthenticator($apiClientId, $apiClientSecret);
 
       $authenticator->withImageProcessing()->withUsage();
@@ -77,12 +77,12 @@ class Client {
     // Construct data containing url to be processed and params.
     //
     $data = ["body" => []];
-    if($this->accessToken) {
+    if ($this->accessToken) {
       $data["body"]["access_token"] = $this->accessToken->token();
     }
 
     $params = $imageProcessingRequest->generateFormData();
-    foreach($params as $key => $value) {
+    foreach ($params as $key => $value) {
       $data["body"][$key] = $value;
     }
 
@@ -90,7 +90,7 @@ class Client {
     //
     // NOTE: This will be ignored for all API credentials (except trusted applications) to prevent ip hoaxing
     //
-    if($this->forwardForIp) {
+    if ($this->forwardForIp) {
       $data["headers"] = [
         "Z4-Connecting-IP" => $this->forwardForIp,
       ];
@@ -129,7 +129,7 @@ class Client {
   public function downloadProcessedImage(ProcessedImage $processedImage, $savePath) {
     $url = $processedImage->fileUrls[0];
 
-    if($this->accessToken != null) {
+    if ($this->accessToken != null) {
       $url .= "?access_token=" . $this->accessToken->token();
     }
 
