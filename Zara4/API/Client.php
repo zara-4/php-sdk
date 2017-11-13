@@ -67,6 +67,16 @@ class Client {
 
 
   /**
+   * Get the access token
+   *
+   * @return AccessToken|Communication\AccessToken\ReissuableAccessToken|null
+   */
+  public function accessToken() {
+    return $this->accessToken;
+  }
+
+
+  /**
    * @param Request $imageProcessingRequest
    * @return array
    */
