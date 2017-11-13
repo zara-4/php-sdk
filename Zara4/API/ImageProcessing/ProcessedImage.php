@@ -1,7 +1,7 @@
 <?php namespace Zara4\API\ImageProcessing;
 
 
-class ProcessedImage {
+class ProcessedImage implements \JsonSerializable {
 
   /** @var Request $request */
   protected $request;
@@ -88,4 +88,26 @@ class ProcessedImage {
     return $this->compressionRatio() < 1;
   }
 
-} 
+
+  /**
+   * (PHP 5 >= 5.4.0)
+   *
+   * Specify data which should be serialized to JSON
+   *
+   * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+   *
+   * @return mixed data which can be serialized by <b>json_encode</b>,
+   * which is a value of any type other than a resource.
+   */
+  public function jsonSerialize() {
+    return [
+      'request-id'            => $this->requestId,
+      'file-urls'             => $this->fileUrls,
+      'original-file-size'    => $this->originalFileSize,
+      'compressed-file-size'  => $this->compressedFileSize,
+      'percentage-saving'     => $this->percentageSaving(),
+      'compression-ratio'     => $this->compressionRatio(),
+    ];
+  }
+
+}
