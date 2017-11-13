@@ -3,13 +3,13 @@
 
 class Config {
 
-  const VERSION    = '1.1.0';
-  const USER_AGENT = 'Zara 4 PHP-SDK, Version-1.1.0';
+  const VERSION    = '1.2.3';
+  const USER_AGENT = 'Zara 4 PHP-SDK, Version-1.2.3';
 
   const PRODUCTION_API_ENDPOINT = "https://api.zara4.com";
   const DEVELOPMENT_API_ENDPOINT = "http://api.zara4.dev";
 
-  private static $BASE_URL = self::PRODUCTION_API_ENDPOINT;
+  public static $BASE_URL = self::PRODUCTION_API_ENDPOINT;
 
 
   // --- --- --- --- ---
@@ -26,10 +26,20 @@ class Config {
 
 
   /**
+   * Set the base url
+   *
+   * @param $baseUrl
+   */
+  public static function setBaseUrl($baseUrl) {
+    self::$BASE_URL = $baseUrl;
+  }
+
+
+  /**
    * Configure production mode.
    */
   public static function enterProductionMode() {
-    self::$BASE_URL = self::PRODUCTION_API_ENDPOINT;
+    self::setBaseUrl(self::PRODUCTION_API_ENDPOINT);
   }
 
 
@@ -37,8 +47,11 @@ class Config {
    * Configure development mode.
    */
   public static function enterDevelopmentMode() {
-    self::$BASE_URL = self::DEVELOPMENT_API_ENDPOINT;
+    self::setBaseUrl(self::DEVELOPMENT_API_ENDPOINT);
   }
+
+
+
 
 
 } 
