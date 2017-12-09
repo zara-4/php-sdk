@@ -130,7 +130,7 @@ class Client {
 
 
   /**
-   * Download the given ProcessedImage sand save it to the given path.
+   * Download the given ProcessedImage and save it to the given path.
    *
    * @param ProcessedImage $processedImage
    * @param string $savePath
@@ -143,6 +143,18 @@ class Client {
       $url .= "?access_token=" . $this->accessToken->token();
     }
 
+    self::downloadImage($url, $savePath);
+  }
+
+
+  /**
+   * Download the given image url and save it to the given path.
+   *
+   * @param $url
+   * @param $savePath
+   * @throws UnknownServerErrorException
+   */
+  public static function downloadImage($url, $savePath) {
     try {
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
